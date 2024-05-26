@@ -1,0 +1,11 @@
+<configuration>
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%magenta(%d{HH:mm:ss.SSS}) %highlight(%-5level) [%blue(%t)] %yellow(%logger{20}): %msg%n%throwable</pattern>
+    </encoder>
+  </appender>
+
+  <root level="debug">
+    <appender-ref ref="CONSOLE"/>
+  </root>
+</configuration>

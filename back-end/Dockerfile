@@ -1,0 +1,73 @@
+FROM eclipse-temurin:21-jdk-jammy
+
+# Set the Gradle home environment variable
+ENV GRADLE_HOME /opt/gradle
+
+# Add a user and group for Gradle
+RUN set -o errexit -o nounset \
+    && echo "Adding gradle user and group" \
+    && groupadd --system --gid 1000 gradle \
+    && useradd --system --gid gradle --uid 1000 --shell /bin/bash --create-home gradle \
+    && mkdir /home/gradle/.gradle \
+    && chown --recursive gradle:gradle /home/gradle \
+    && chmod --recursive o+rwx /home/gradle \
+    && echo "Symlinking root Gradle cache to gradle Gradle cache" \
+    && ln --symbolic /home/gradle/.gradle /root/.gradle
+
+# Set a volume for Gradle cache
+VOLUME /home/gradle/.gradle
+
+# Set the working directory
+WORKDIR /home/gradle
+
+# Install necessary packages
+RUN set -o errexit -o nounset \
+    && apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        unzip \
+        wget \
+        bzr \
+        git \
+        git-lfs \
+        mercurial \
+        openssh-client \
+        subversion \
+    && rm --recursive --force /var/lib/apt/lists/* \
+    && echo "Testing VCSes" \
+    && which bzr \
+    && which git \
+    && which git-lfs \
+    && which hg \
+    && which svn
+
+# Set the Gradle version and download it
+ENV GRADLE_VERSION 8.7
+ARG GRADLE_DOWNLOAD_SHA256=544c35d6bd849ae8a5ed0bcea39ba677dc40f49df7d1835561582da2009b961d
+RUN set -o errexit -o nounset \
+    && echo "Downloading Gradle" \
+    && wget --no-verbose --output-document=gradle.zip "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" \
+    && echo "Checking Gradle download hash" \
+    && echo "${GRADLE_DOWNLOAD_SHA256} *gradle.zip" | sha256sum --check - \
+    && echo "Installing Gradle" \
+    && unzip gradle.zip \
+    && rm gradle.zip \
+    && mv "gradle-${GRADLE_VERSION}" "${GRADLE_HOME}/" \
+    && ln --symbolic "${GRADLE_HOME}/bin/gradle" /usr/bin/gradle
+
+# Test Gradle installation
+USER gradle
+RUN set -o errexit -o nounset \
+    && echo "Testing Gradle installation" \
+    && gradle --version
+
+# Switch back to root user
+# USER root
+
+# Copy the application files to the container
+COPY . ./app
+
+# Set the working directory to the application directory
+#RUN cd ./app
+
+# Run the application using Gradle
+#CMD ["gradle", "bootRun"]

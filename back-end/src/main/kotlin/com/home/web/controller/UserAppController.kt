@@ -61,7 +61,7 @@ class UserAppController(
 
     @PostMapping("create")
     fun createUser(@RequestBody webUserCreateDto: WebUserCreateDto): Optional<WebUser> {
-        logger.debug { "Invoke createUser(webUserAppDto:$webUserCreateDto)" }
+        logger.info { "Invoke createUser(webUserAppDto:$webUserCreateDto)" }
         return webUserService.createUser(
             firstName = webUserCreateDto.firstName,
             lastName = webUserCreateDto.lastName,
@@ -72,14 +72,14 @@ class UserAppController(
 
     @GetMapping("delete")
     fun deleteUser(@RequestParam("id") id: Long): String {
-        logger.debug { "Invoke deleteUser(id:$id)" }
+        logger.info { "Invoke deleteUser(id:$id)" }
         webUserService.deleteUserById(id)
         return DONE_STATUS
     }
 
     @PostMapping("edit")
     fun editUser(@RequestBody webUserEditDto: WebUserEditDto): WebUser {
-        logger.debug { "Invoke editUser(webUserEditDto:$webUserEditDto)" }
+        logger.info { "Invoke editUser(webUserEditDto:$webUserEditDto)" }
         return webUserService.updateUser(
             id = webUserEditDto.id,
             firstName = webUserEditDto.firstName ?: "",

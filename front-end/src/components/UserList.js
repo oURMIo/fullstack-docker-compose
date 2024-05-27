@@ -14,7 +14,7 @@ const UserList = ({ users }) => {
       <ul>
         {users.map(user => (
           <div key={user.id} className="user__header">
-            <p><strong>ID:</strong> {user.id}</p>
+            <p><strong>User ID:</strong> {user.id}</p>
             <p><strong>Name:</strong> {user.firstName.substring(0, 15)} {user.lastName.substring(0, 15)}</p>
             <p><strong>Position:</strong> {user.position.substring(0, 15)}</p>
             <p><strong>Supervisor:</strong> {user.supervisor.substring(0, 15)}</p>

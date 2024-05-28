@@ -1,0 +1,5 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Tue May 28 15:55:35 AMT 2024
+spring-webmvc-6.1.8-sources.jar>central=
+spring-webmvc-6.1.8.jar>central=
+spring-webmvc-6.1.8.pom>central=

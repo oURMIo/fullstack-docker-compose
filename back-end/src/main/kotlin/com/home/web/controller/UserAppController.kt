@@ -3,9 +3,11 @@ package com.home.web.controller
 import com.home.web.domain.WebUser
 import com.home.web.dto.WebUserCreateDto
 import com.home.web.dto.WebUserEditDto
+import com.home.web.exeption.GlobalExceptionHandler
 import com.home.web.service.WebUserService
 import java.util.Optional
-import mu.KotlinLogging
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -16,20 +18,20 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
-private val logger = KotlinLogging.logger {}
 
 @RestController
 @RequestMapping("/")
 class UserAppController(
     @Autowired private val webUserService: WebUserService,
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(UserAppController::class.java)
 
     @GetMapping
     fun getStatus() = WORK_STATUS
 
     @GetMapping("users")
     fun getUsers(): List<WebUser> {
-        logger.debug { "Invoke in getUsers" }
+        logger.trace("Invoke in getUsers")
         return webUserService.getUsers()
     }
 
@@ -37,7 +39,7 @@ class UserAppController(
     fun getUserById(
         @RequestParam("id") id: Long,
     ): ResponseEntity<out Any> {
-        logger.debug { "Invoke in getUserById(id:$id)" }
+        logger.trace("Invoke in getUserById(id:$id)")
         val webUser = webUserService.findById(id)
         return if (webUser.isPresent) {
             ResponseEntity(webUser, HttpStatus.OK)
@@ -50,7 +52,7 @@ class UserAppController(
     fun getUserByFirstname(
         @RequestParam("firstname") firstname: String,
     ): ResponseEntity<out Any> {
-        logger.debug { "Invoke in getUserByUsername(firstname:$firstname)" }
+        logger.trace("Invoke in getUserByUsername(firstname:$firstname)")
         val userApp = webUserService.findByUsername(firstname)
         return if (userApp.isPresent) {
             ResponseEntity(userApp, HttpStatus.OK)
@@ -61,7 +63,7 @@ class UserAppController(
 
     @PostMapping("create")
     fun createUser(@RequestBody webUserCreateDto: WebUserCreateDto): Optional<WebUser> {
-        logger.info { "Invoke createUser(webUserAppDto:$webUserCreateDto)" }
+        logger.trace("Invoke createUser(webUserAppDto:{})", webUserCreateDto)
         return webUserService.createUser(
             firstName = webUserCreateDto.firstName,
             lastName = webUserCreateDto.lastName,
@@ -72,14 +74,14 @@ class UserAppController(
 
     @GetMapping("delete")
     fun deleteUser(@RequestParam("id") id: Long): String {
-        logger.info { "Invoke deleteUser(id:$id)" }
+        logger.trace("Invoke deleteUser(id:$id)")
         webUserService.deleteUserById(id)
         return DONE_STATUS
     }
 
     @PostMapping("edit")
     fun editUser(@RequestBody webUserEditDto: WebUserEditDto): WebUser {
-        logger.info { "Invoke editUser(webUserEditDto:$webUserEditDto)" }
+        logger.trace("Invoke editUser(webUserEditDto:{})", webUserEditDto)
         return webUserService.updateUser(
             id = webUserEditDto.id,
             firstName = webUserEditDto.firstName ?: "",

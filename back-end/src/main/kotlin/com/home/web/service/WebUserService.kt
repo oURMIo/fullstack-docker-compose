@@ -5,24 +5,23 @@ import com.home.web.exeption.DatabaseException
 import com.home.web.exeption.WebUserNotFoundException
 import com.home.web.repository.WebUserRepository
 import java.util.Optional
-import mu.KotlinLogging
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-
-
-private val logger = KotlinLogging.logger {}
 
 @Service
 class WebUserService(
     @Autowired
     private val webUserRepository: WebUserRepository,
 ) {
+    private val logger: Logger = LoggerFactory.getLogger(WebUserService::class.java)
 
     fun getUsers(): List<WebUser> {
         try {
             return webUserRepository.findAll().toList()
         } catch (e: DatabaseException) {
-            logger.error { "Got issue in getUsers, $e" }
+            logger.error("Got issue in getUsers, $e")
             return listOf()
         }
     }
@@ -31,7 +30,7 @@ class WebUserService(
         try {
             return webUserRepository.findById(userId)
         } catch (e: DatabaseException) {
-            logger.error { "Got issue in getUsers(userId:$userId), $e" }
+            logger.error("Got issue in getUsers(userId:$userId), $e")
             return Optional.empty()
         }
     }
@@ -40,7 +39,7 @@ class WebUserService(
         try {
             return webUserRepository.findFirstByFirstName(username)
         } catch (e: DatabaseException) {
-            logger.error { "Got issue in findByUsername(username:$username), $e" }
+            logger.error("Got issue in findByUsername(username:$username), $e")
             return Optional.empty()
         }
     }
@@ -55,10 +54,10 @@ class WebUserService(
         try {
             return Optional.of(webUserRepository.save(userApp))
         } catch (e: DatabaseException) {
-            logger.error {
+            logger.error(
                 "Got issue in createUser(firstName:$firstName, lastName:$lastName, " +
                         "position:$position, supervisor:$supervisor), $e"
-            }
+            )
             return Optional.empty()
         }
     }
@@ -85,7 +84,7 @@ class WebUserService(
         try {
             webUserRepository.deleteById(userId)
         } catch (e: DatabaseException) {
-            logger.error { "Got issue in deleteUserById, $e" }
+            logger.error("Got issue in deleteUserById, $e")
         }
     }
 }

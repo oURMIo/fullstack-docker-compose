@@ -6,8 +6,10 @@ import UserList from "./components/UserList";
 import NewUserModal from "./modal/NewUserModal";
 import DeleteUserModal from "./modal/DeleteUserModal";
 import EditUserModal from "./modal/EditUserModal";
+import config from "./config";
 
 function App() {
+  const backendUrl = `http://${config.host}:${config.port}`;
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -33,7 +35,7 @@ function App() {
 
   const getAllUsers = async () => {
     try {
-      const response = await fetch("http://localhost:8989/users");
+      const response = await fetch(`${backendUrl}/users`);
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       setUsers(data);

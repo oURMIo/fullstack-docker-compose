@@ -1,4 +1,4 @@
-version: "3.3"
+version: '3.8'
 
 services:
   app-back:
@@ -17,6 +17,8 @@ services:
     build: ./front-end
     restart: on-failure
     ports:
-      - 3000:3000
+      - 3000:80
+    depends_on:
+      - app-back
     stdin_open: true
     tty: true

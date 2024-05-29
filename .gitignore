@@ -1,8 +1,4 @@
 # CONF
-config.js
-**/config.js
-**/**/config.js
-**/**/**/config.js
 
 # dependencies
 **/node_modules

@@ -6,10 +6,10 @@ import UserList from "./components/UserList";
 import NewUserModal from "./modal/NewUserModal";
 import DeleteUserModal from "./modal/DeleteUserModal";
 import EditUserModal from "./modal/EditUserModal";
-import config from "./config";
+import Config from "./config/Config"
 
 function App() {
-  const backendUrl = `http://${config.host}:${config.port}`;
+  const backendUrl = `http://${Config.host}:${Config.port}`;
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

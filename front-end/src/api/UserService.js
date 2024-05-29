@@ -1,7 +1,7 @@
 import axios from "axios";
-import config from "./config";
+import Config from "../config/Config";
 
-const API_URL = `http://${config.host}:${config.port}`;
+const API_URL = `http://${Config.host}:${Config.port}`;
 
 export async function saveUser(user) {
   return await axios.post(`${API_URL}/create`, user);

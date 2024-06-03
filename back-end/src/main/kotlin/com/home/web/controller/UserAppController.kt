@@ -3,7 +3,6 @@ package com.home.web.controller
 import com.home.web.domain.WebUser
 import com.home.web.dto.WebUserCreateDto
 import com.home.web.dto.WebUserEditDto
-import com.home.web.exeption.GlobalExceptionHandler
 import com.home.web.service.WebUserService
 import java.util.Optional
 import org.slf4j.Logger

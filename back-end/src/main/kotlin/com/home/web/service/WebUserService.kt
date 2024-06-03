@@ -1,8 +1,8 @@
 package com.home.web.service
 
 import com.home.web.domain.WebUser
-import com.home.web.exeption.DatabaseException
-import com.home.web.exeption.WebUserNotFoundException
+import com.home.web.exception.DatabaseException
+import com.home.web.exception.WebUserNotFoundException
 import com.home.web.repository.WebUserRepository
 import java.util.Optional
 import org.slf4j.Logger

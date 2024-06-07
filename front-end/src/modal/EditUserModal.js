@@ -1,6 +1,7 @@
 import React from "react";
 
 const EditUserModal = ({
+  userID,
   values,
   onChange,
   handleEditUser,
@@ -20,7 +21,7 @@ const EditUserModal = ({
               <span className="details">User ID</span>
               <input
                 type="text"
-                value={values.id}
+                value={userID}
                 onChange={onChange}
                 name="id"
                 required

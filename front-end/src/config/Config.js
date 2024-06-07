@@ -1,6 +1,6 @@
 const Config = {
-  host: "domain.serv",
-  port: 8080,
+  host: "localhost",
+  port: 8989,
 };
 
 export default Config;

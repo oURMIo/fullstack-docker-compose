@@ -6,7 +6,7 @@ import UserList from "./components/UserList";
 import NewUserModal from "./modal/NewUserModal";
 import DeleteUserModal from "./modal/DeleteUserModal";
 import EditUserModal from "./modal/EditUserModal";
-import Config from "./config/Config"
+import Config from "./config/Config";
 
 function App() {
   const backendUrl = `http://${Config.host}:${Config.port}`;
@@ -16,26 +16,17 @@ function App() {
   const [modalAddUserOpen, setModalAddUserOpen] = useState(false);
   const [modalDeleteUserOpen, setModalDeleteUserOpen] = useState(false);
   const [modalEditUserOpen, setModalEditUserOpen] = useState(false);
-  const [addUserValues, setAddUserValues] = useState({
+  const [userValues, setUserValues] = useState({
     firstName: "",
     lastName: "",
     position: "",
     supervisor: "",
   });
-  const [editUserValues, setEditUserValues] = useState({
-    id: 0,
-    firstName: "",
-    lastName: "",
-    position: "",
-    supervisor: "",
-  });
-  const [deleteUserValums, setDeleteUserValums] = useState({
-    id: 0,
-  });
+  const [userId, setUserId] = useState(0);
 
   const getAllUsers = async () => {
     try {
-      const response = await fetch(`${backendUrl}/users`);
+      const response = await fetch(`${backendUrl}/api/user`);
       if (!response.ok) throw new Error("Network response was not ok");
       const data = await response.json();
       setUsers(data);
@@ -49,9 +40,9 @@ function App() {
   const handleAddUser = async (event) => {
     event.preventDefault();
     try {
-      await saveUser(addUserValues);
+      await saveUser(userValues);
       setModalAddUserOpen(false);
-      setAddUserValues({
+      setUserValues({
         firstName: "",
         lastName: "",
         position: "",
@@ -65,11 +56,9 @@ function App() {
 
   const handleDeleteUser = async () => {
     try {
-      await deleteUser(deleteUserValums);
+      await deleteUser(userId);
       setModalDeleteUserOpen(false);
-      setDeleteUserValums({
-        id: 0,
-      });
+      setUserId(0);
       getAllUsers();
     } catch (error) {
       console.log(error);
@@ -79,10 +68,10 @@ function App() {
   const handleEditUser = async (event) => {
     event.preventDefault();
     try {
-      await editUser(editUserValues);
+      await editUser(userId, userValues);
       setModalEditUserOpen(false);
-      setEditUserValues({
-        id: 0,
+      setUserId(0);
+      setUserValues({
         firstName: "",
         lastName: "",
         position: "",
@@ -118,10 +107,10 @@ function App() {
         <div className="add__user">
           {modalAddUserOpen && (
             <NewUserModal
-              values={addUserValues}
+              values={userValues}
               onChange={(e) =>
-                setAddUserValues({
-                  ...addUserValues,
+                setUserValues({
+                  ...userValues,
                   [e.target.name]: e.target.value,
                 })
               }
@@ -133,8 +122,8 @@ function App() {
         <div className="delete__user">
           {modalDeleteUserOpen && (
             <DeleteUserModal
-              values={deleteUserValums}
-              onChange={(e) => setDeleteUserValums(e.target.value)}
+              values={userId}
+              onChange={(e) => setUserId(e.target.value)}
               handleDeleteUser={handleDeleteUser}
               pageToggleModal={(isOpen) => setModalDeleteUserOpen(isOpen)}
             />
@@ -143,13 +132,18 @@ function App() {
         <div className="edit__user">
           {modalEditUserOpen && (
             <EditUserModal
-              values={editUserValues}
-              onChange={(e) =>
-                setEditUserValues({
-                  ...editUserValues,
-                  [e.target.name]: e.target.value,
-                })
-              }
+              userID={userId}
+              values={userValues}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                if (name === "id") {
+                  setUserId(e.target.value);
+                }
+                setUserValues({
+                  ...userValues,
+                  [name]: value,
+                });
+              }}
               handleEditUser={handleEditUser}
               pageToggleModal={(isOpen) => setModalEditUserOpen(isOpen)}
             />

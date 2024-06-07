@@ -3,7 +3,6 @@ package com.home.web.dto
 import org.springframework.lang.Nullable
 
 data class WebUserEditDto(
-    val id: Long,
     @Nullable
     val firstName: String?,
     @Nullable

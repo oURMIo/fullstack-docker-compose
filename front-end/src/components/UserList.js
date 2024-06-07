@@ -10,19 +10,45 @@ import Paper from '@mui/material/Paper';
 
 const UserList = ({ users }) => {
   return (
-    <div>
-      <ul>
-        {users.map(user => (
-          <div key={user.id} className="user__header">
-            <p><strong>User ID:</strong> {user.id}</p>
-            <p><strong>Name:</strong> {user.firstName.substring(0, 15)} {user.lastName.substring(0, 15)}</p>
-            <p><strong>Position:</strong> {user.position.substring(0, 15)}</p>
-            <p><strong>Supervisor:</strong> {user.supervisor.substring(0, 15)}</p>
-            <p><strong>Creation Date:</strong> {new Date(user.creationDate).toLocaleString()}</p>
-          </div>
-        ))}
-      </ul>
-    </div>
+    <TableContainer component={Paper}>
+      <Table>
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <strong>User ID</strong>
+            </TableCell>
+            <TableCell>
+              <strong>Name</strong>
+            </TableCell>
+            <TableCell>
+              <strong>Position</strong>
+            </TableCell>
+            <TableCell>
+              <strong>Supervisor</strong>
+            </TableCell>
+            <TableCell>
+              <strong>Creation Date</strong>
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {users.map((user) => (
+            <TableRow key={user.id}>
+              <TableCell>{user.id}</TableCell>
+              <TableCell>
+                {user.firstName.substring(0, 15)}{" "}
+                {user.lastName.substring(0, 15)}
+              </TableCell>
+              <TableCell>{user.position.substring(0, 15)}</TableCell>
+              <TableCell>{user.supervisor.substring(0, 15)}</TableCell>
+              <TableCell>
+                {new Date(user.creationDate).toLocaleString()}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 

@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,24 +21,21 @@ import org.springframework.web.bind.annotation.RestController
 
 
 @RestController
-@RequestMapping("/")
+@RequestMapping("/api/user")
 class UserAppController(
     @Autowired private val webUserService: WebUserService,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(UserAppController::class.java)
 
-    @GetMapping
-    fun getStatus() = WORK_STATUS
-
-    @GetMapping("users")
+    @GetMapping("", "/")
     fun getUsers(): List<WebUser> {
         logger.trace("Invoke in getUsers")
         return webUserService.getUsers()
     }
 
-    @GetMapping("user")
+    @GetMapping("/{id}")
     fun getUserById(
-        @RequestParam("id") id: Long,
+        @PathVariable id: Long,
     ): ResponseEntity<out Any> {
         logger.trace("Invoke in getUserById(id:$id)")
         val webUser = webUserService.findById(id)
@@ -47,7 +46,7 @@ class UserAppController(
         }
     }
 
-    @GetMapping("user-by-firstname")
+    @GetMapping("/by-name")
     fun getUserByFirstname(
         @RequestParam("firstname") firstname: String,
     ): ResponseEntity<out Any> {
@@ -60,7 +59,7 @@ class UserAppController(
         }
     }
 
-    @PostMapping("create")
+    @PostMapping("", "/")
     fun createUser(@RequestBody webUserCreateDto: WebUserCreateDto): Optional<WebUser> {
         logger.trace("Invoke createUser(webUserAppDto:{})", webUserCreateDto)
         return webUserService.createUser(
@@ -71,18 +70,18 @@ class UserAppController(
         )
     }
 
-    @GetMapping("delete")
-    fun deleteUser(@RequestParam("id") id: Long): String {
+    @DeleteMapping("/{id}")
+    fun deleteUser(@PathVariable id: Long): String {
         logger.trace("Invoke deleteUser(id:$id)")
         webUserService.deleteUserById(id)
         return DONE_STATUS
     }
 
-    @PostMapping("edit")
-    fun editUser(@RequestBody webUserEditDto: WebUserEditDto): WebUser {
+    @PostMapping("/{id}")
+    fun editUser(@PathVariable id: Long, @RequestBody webUserEditDto: WebUserEditDto): WebUser {
         logger.trace("Invoke editUser(webUserEditDto:{})", webUserEditDto)
         return webUserService.updateUser(
-            id = webUserEditDto.id,
+            id = id,
             firstName = webUserEditDto.firstName ?: "",
             lastName = webUserEditDto.lastName ?: "",
             position = webUserEditDto.position ?: "",
@@ -91,5 +90,4 @@ class UserAppController(
     }
 }
 
-private const val WORK_STATUS = "WORKING"
 private const val DONE_STATUS = "DONE"
